@@ -4,26 +4,48 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     RecyclerView rv;
-    List<Serie> lista;
-    SeriesAdapter series;
+    List<Serie> lista,favoritos;
+    SeriesAdapter series,favs;
+    Button listabot,favbot;
     LinearLayoutManager manager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        listabot = findViewById(R.id.peliculasButton);
+        favbot = findViewById(R.id.favButton);
         lista = llenarLista();
         rv = findViewById(R.id.recycler);
         manager = new LinearLayoutManager(this);
         series = new SeriesAdapter(lista,this);
+        favs = new SeriesAdapter(new ArrayList<Serie>() ,this);
         rv.setLayoutManager(manager);
         rv.setAdapter(series);
         rv.setHasFixedSize(true);
+        favbot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateFavoritos(((SeriesAdapter)rv.getAdapter()).lista);
+                Log.d("BOTON_FAVORITOS", "se cambio la lista");
+            }
+        });
+        listabot.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rv.swapAdapter(series,false);
+                Log.d("BOTON_PELICULAS", "se cambio la lista");
+            }
+        });
     }
 
     public List<Serie> llenarLista(){
@@ -35,5 +57,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         return lista;
+    }
+
+    public void updateFavoritos(List<Serie> series) {
+        Iterator<Serie> favs = series.iterator();
+        while (favs.hasNext()) {
+            if (!favs.next().getisFav()) {
+                favs.remove();
+            }
+        }
+        lista = series;
+        this.favs = new SeriesAdapter(series ,this);
+        rv.swapAdapter(this.favs,false);
     }
 }

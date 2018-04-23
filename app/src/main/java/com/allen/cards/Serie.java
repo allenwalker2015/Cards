@@ -7,12 +7,16 @@ package com.allen.cards;
 public class Serie {
   private String name,caps,desc;
   private int img;
+  private boolean isFav= false;
 
-  public Serie(String name, String caps,String desc,int img){
+
+
+    public Serie(String name, String caps, String desc, int img){
       this.name=name;
       this.caps=caps;
       this.desc=desc;
       this.img=img;
+
   }
 
     public String getCaps() {
@@ -45,5 +49,13 @@ public class Serie {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getisFav() {
+        return isFav;
+    }
+
+    public void setFav(boolean fav) {
+        isFav = fav;
     }
 }
