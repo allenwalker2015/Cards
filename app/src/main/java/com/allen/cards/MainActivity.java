@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
     Button listabot,favbot;
     LinearLayoutManager manager;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listabot = findViewById(R.id.peliculasButton);
@@ -35,7 +35,16 @@ public class MainActivity extends AppCompatActivity {
         favbot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateFavoritos(((SeriesAdapter)rv.getAdapter()).lista);
+                List<Serie> oldad = ((SeriesAdapter)rv.getAdapter()).getLista();
+                List<Serie> ad = new ArrayList<>(oldad);
+                Iterator<Serie> newfavs = ad.iterator();
+                while (newfavs.hasNext()) {
+                    if (!newfavs.next().getisFav()) {
+                        newfavs.remove();
+                    }
+                }
+                favs = new SeriesAdapter(ad , view.getContext());
+                rv.swapAdapter(favs,false);
                 Log.d("BOTON_FAVORITOS", "se cambio la lista");
             }
         });
@@ -60,14 +69,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateFavoritos(List<Serie> series) {
-        Iterator<Serie> favs = series.iterator();
-        while (favs.hasNext()) {
-            if (!favs.next().getisFav()) {
-                favs.remove();
-            }
-        }
-        lista = series;
-        this.favs = new SeriesAdapter(series ,this);
-        rv.swapAdapter(this.favs,false);
+
     }
 }
