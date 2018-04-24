@@ -34,16 +34,11 @@
         android:id="@+id/texto"
         android:textSize="16sp"
        />
-        <Button
+        <ImageButton
             android:layout_width="wrap_content"
-            android:text="FAV"
+            android:src="@android:drawable/btn_star_big_off"
             android:layout_height="wrap_content"
             android:id="@+id/starbutton"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:text="Ver"
-            android:layout_height="wrap_content"
             />
     </LinearLayout>
 

@@ -27,23 +27,54 @@ public class MainActivity extends AppCompatActivity {
         lista = llenarLista();
         rv = findViewById(R.id.recycler);
         manager = new LinearLayoutManager(this);
-        series = new SeriesAdapter(lista,this);
-        favs = new SeriesAdapter(new ArrayList<Serie>() ,this);
+        series = new SeriesAdapter(lista, this) {
+            @Override
+            public void eliminarLista(int posicion, SeriesViewHolder holder) {
+
+            }
+
+            @Override
+            public void hideElement(int posicion, SeriesViewHolder holder) {
+
+            }
+        };
+        favs = new SeriesAdapter(lista ,this) {
+            @Override
+            public void eliminarLista(int posicion, SeriesViewHolder holder) {
+                favs.getLista().remove(posicion);
+                favs.notifyItemRemoved(posicion);
+                favs.notifyItemRangeChanged(posicion,favs.getLista().size());
+            }
+
+            @Override
+            public void hideElement(int posicion, SeriesViewHolder holder) {
+                if(lista.get(posicion).getisFav()){
+
+                }
+            }
+        };
         rv.setLayoutManager(manager);
         rv.setAdapter(series);
         rv.setHasFixedSize(true);
         favbot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                List<Serie> oldad = ((SeriesAdapter)rv.getAdapter()).getLista();
-                List<Serie> ad = new ArrayList<>(oldad);
-                Iterator<Serie> newfavs = ad.iterator();
-                while (newfavs.hasNext()) {
-                    if (!newfavs.next().getisFav()) {
-                        newfavs.remove();
-                    }
-                }
-                favs = new SeriesAdapter(ad , view.getContext());
+//                List<Serie> oldad = ((SeriesAdapter)rv.getAdapter()).getLista();
+//                List<Serie> ad = new ArrayList<>(oldad);
+//                Iterator<Serie> newfavs = ad.iterator();
+//                while (newfavs.hasNext()) {
+//                    if (!newfavs.next().getisFav()) {
+//                        newfavs.remove();
+//                    }
+//                }
+//                favs = new SeriesAdapter(ad, view.getContext()) {
+//                    @Override
+//                    public void eliminarLista(int posicion, SeriesViewHolder holder) {
+//                        favs.getLista().remove(posicion);
+//                        favs.notifyItemRemoved(posicion);
+//                        favs.notifyItemRangeChanged(posicion,favs.getLista().size());
+//                    }
+//                };
                 rv.swapAdapter(favs,false);
                 Log.d("BOTON_FAVORITOS", "se cambio la lista");
             }
